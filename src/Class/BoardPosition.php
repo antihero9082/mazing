@@ -14,16 +14,17 @@ class BoardPosition extends Position
         $this->yPos = $yPos;
         $this->board = $board;
     }
-
+    //todo: get affected cells and check them - exit if : cell is not valid, cell is revisited, or destination cell is visited AND in between cell is not (so we dont make squares);
     public function moveLeft($spaces = 1)
     {
-        if ($this->board->getValidCell($this->xPos - $spaces, $this->yPos)) {
-            //check board for revisited cells
-            $destination = $this->xPos-$spaces;
-            if ('RV' !== $this->board->getValidCell($destination, $this->yPos)) {
-
-            }
-            for ($i = 0; $i < $spaces; $i++) {
+        $destination = $this->xPos - $spaces;
+        if ($this->board->getValidCell($this->xPos - $spaces, $this->yPos)
+            &&
+            ('RV' !== $this->board->getCellValue($destination, $this->yPos))
+            && //If the next cell is not visited AND the following next cell is visited, leave a wall
+            ($this->board->getCellValue($destination, $this->yPos) != Board::NOTOUCH)
+        ) {
+            for ($i = 1; $i < $spaces; $i++) {
                 $this->board->markBoard($this->xPos - $i, $this->yPos);
             }
             $this->lastMove = 'moveLeft';
@@ -31,14 +32,17 @@ class BoardPosition extends Position
             $this->markCurrent();
             return true;
         }
-
         return false;
     }
 
     public function moveRight($spaces = 1)
     {
-        if ($this->board->getValidCell($this->xPos + $spaces, $this->yPos)) {
-            for ($i = 0; $i < $spaces; $i++) {
+        $destination = $this->xPos + $spaces;
+        if ($this->board->getValidCell($this->xPos + $spaces, $this->yPos)
+            &&
+            'RV' !== $this->board->getCellValue($destination, $this->yPos)
+        ) {
+            for ($i = 1; $i < $spaces; $i++) {
                 $this->board->markBoard($this->xPos + $i, $this->yPos);
             }
             $this->lastMove = 'moveRight';
@@ -52,8 +56,12 @@ class BoardPosition extends Position
 
     public function moveUp($spaces = 1)
     {
-        if ($this->board->getValidCell($this->xPos, $this->yPos - $spaces)) {
-            for ($i = 0; $i < $spaces; $i++) {
+        $destination = $this->yPos - $spaces;
+        if ($this->board->getValidCell($this->xPos, $destination)
+            &&
+            'RV' !== $this->board->getCellValue($this->xPos, $destination)
+        ) {
+            for ($i = 1; $i < $spaces; $i++) {
                 $this->board->markBoard($this->xPos, $this->yPos - $i);
             }
             $this->lastMove = 'moveUp';
@@ -61,13 +69,18 @@ class BoardPosition extends Position
             $this->markCurrent();
             return true;
         }
+
         return false;
     }
 
     public function moveDown($spaces = 1)
     {
-        if ($this->board->getValidCell($this->xPos, $this->yPos + $spaces)) {
-            for ($i = 0; $i < $spaces; $i++) {
+        $destination = $this->yPos + $spaces;
+        if ($this->board->getValidCell($this->xPos, $destination)
+            &&
+            'RV' !== $this->board->getCellValue($this->xPos, $destination)
+        ) {
+            for ($i = 1; $i < $spaces; $i++) {
                 $this->board->markBoard($this->xPos, $this->yPos + $i);
             }
             $this->yPos = $this->yPos + $spaces;
@@ -75,6 +88,7 @@ class BoardPosition extends Position
             $this->markCurrent();
             return true;
         }
+
         return false;
     }
 

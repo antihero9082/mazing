@@ -21,6 +21,7 @@ class Maze
     {
         $ended = false;
         $i = 0 ;
+        $this->board->markBoard(0, 0);
         while (!$ended) {
             $position = $this->makeMove($this->position);
             if ($position->getXPos() == $this->board->getWidth() -1 && $position->getYPos() == $this->board->getHeight()-1) {
@@ -28,9 +29,8 @@ class Maze
                 echo $i;
             }
             $i++;
-            //$this->printBoard();
+            $this->board->printBoard();
         }
-        $this->currentState[$this->width-1][$this->height-1] = 'f';
         echo ('zomgboardprint'."\n");
     }
 
@@ -46,7 +46,7 @@ class Maze
             //if no legal moves best move backwards
             $legalMoves = $this->getLegalMoves($currentPosition);
         }
-        $position = $currentPosition->{$legalMoves[mt_rand(0, count($legalMoves) - 1)]}(2);
+        $currentPosition->{$legalMoves[mt_rand(0, count($legalMoves) - 1)]}(2);
 
 
         return $currentPosition;

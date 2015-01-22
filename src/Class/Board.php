@@ -17,14 +17,17 @@ class Board
     /** @var  array $currentState */
     protected $currentState;
 
+    private $runtime;
+
     public function __construct($width = 40, $height = 40)
     {
+        $this->runtime = new \DateTime();
         $this->width = $width;
         $this->height = $height;
         $currentState = [];
         for ($w = 0; $w < $this->width; $w++) {
             for ($h = 0; $h < $this->height; $h++) {
-                $currentState[$w][] = $h;
+                $currentState[$w][$h] = self::NOTOUCH;
             }
         }
         $this->currentState = $currentState;
@@ -71,18 +74,28 @@ class Board
         return false;
     }
 
+    public function getCellValue($width, $height)
+    {
+        return $this->currentState[$width][$height];
+    }
+
+    public function setCellValue($width, $height, $value)
+    {
+        return $this->currentState[$width][$height] = $value;
+    }
+
     public function toArray()
     {
         return [$this->width, $this->height];
     }
 
-    public function markBoard($width, $height)
+    public function markBoard($xPos, $yPos)
     {
-        $boardCell = &$this->currentState[$width][$height];
+        $boardCell = &$this->currentState[$xPos][$yPos];
         if ($boardCell == 'N') {
-            $boardCell = 'V';
-        } elseif ($boardCell == 'V') {
-            $boardCell = 'RV';
+            $boardCell = '?';
+        } elseif ($boardCell == '?') {
+            $boardCell = '.';
         }
     }
 
@@ -93,12 +106,19 @@ class Board
 
     public function printBoard()
     {   ob_start();
+        for ($w = 0; $w < $this->width; $w++) {
+            for ($h = 0; $h < $this->height; $h++) {
+                echo($this->getCellValue($w, $h));
+            }
+            echo "\n";
+        }
+        echo "\n======================================\n";
         $this->write(ob_get_clean());
     }
 
     private function write($str)
     {
-        $handle = fopen('test', 'a');
+        $handle = fopen(sprintf('Draw/test-%s', $this->runtime->format('c')), 'a');
         if (!$handle) {
             die('nofilez =[[[');
         } else {
