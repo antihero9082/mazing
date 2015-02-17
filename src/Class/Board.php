@@ -5,8 +5,8 @@ namespace src;
 class Board
 {
     const NOTOUCH = 'N';
-    const VISITED = 'V';
-    const REVISITED = 'RV';
+    const VISITED = '?';
+    const REVISITED = '.';
 
     /** @var  int width */
     protected $width;
