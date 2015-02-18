@@ -1,0 +1,18 @@
+{
+  "name": "antihero9082/mazing",
+  "description": "A simple maze generator written in PHP.",
+  "authors": [
+    {
+      "name": "Stefan Tysma",
+      "email": "stysma@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4",
+    "phpunit/phpunit": "4.5.*"
+  },
+  "autoload": {
+    "psr-0": { "": "src/" }
+  },
+  "minimum-stability": "stable"
+}

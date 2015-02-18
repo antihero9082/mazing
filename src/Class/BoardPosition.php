@@ -4,6 +4,14 @@ require_once 'Position.php';
 
 class BoardPosition extends Position
 {
+    const MOVELEFT   = 'moveLeft';
+
+    const MOVERIGHT  = 'moveRight';
+
+    const MOVEDOWN   = 'moveDown';
+
+    const MOVEUP     = 'moveUp';
+
     protected $board;
 
     protected $lastMove;
@@ -32,8 +40,8 @@ class BoardPosition extends Position
             for ($i = 1; $i < $spaces; $i++) {
                 $this->board->markBoard($this->xPos - $i, $this->yPos);
             }
-            $this->lastMove = 'moveLeft';
-            $this->previousSpace = 'moveRight';
+            $this->lastMove = __FUNCTION__;
+            $this->previousSpace = $this->getOppositeMove(__FUNCTION__);
             $this->xPos = $this->xPos-$spaces;
             $this->markCurrent();
             return true;
@@ -56,8 +64,8 @@ class BoardPosition extends Position
             for ($i = 1; $i < $spaces; $i++) {
                 $this->board->markBoard($this->xPos + $i, $this->yPos);
             }
-            $this->lastMove = 'moveRight';
-            $this->previousSpace = 'moveLeft';
+            $this->lastMove = __FUNCTION__;
+            $this->previousSpace = $this->getOppositeMove(__FUNCTION__);
             $this->xPos = $this->xPos + $spaces;
             $this->markCurrent();
             return true;
@@ -81,8 +89,8 @@ class BoardPosition extends Position
             for ($i = 1; $i < $spaces; $i++) {
                 $this->board->markBoard($this->xPos, $this->yPos - $i);
             }
-            $this->lastMove = 'moveUp';
-            $this->previousSpace = 'moveDown';
+            $this->lastMove = __FUNCTION__;
+            $this->previousSpace = $this->getOppositeMove(__FUNCTION__);
             $this->yPos = $this->yPos - $spaces;
             $this->markCurrent();
             return true;
@@ -106,9 +114,9 @@ class BoardPosition extends Position
             for ($i = 1; $i < $spaces; $i++) {
                 $this->board->markBoard($this->xPos, $this->yPos + $i);
             }
+            $this->lastMove = __FUNCTION__;
+            $this->previousSpace = $this->getOppositeMove(__FUNCTION__);
             $this->yPos = $this->yPos + $spaces;
-            $this->lastMove = 'moveDown';
-            $this->previousSpace = 'moveUp';
             $this->markCurrent();
             return true;
         }
@@ -224,5 +232,21 @@ class BoardPosition extends Position
     public function getPreviousSpace()
     {
         return $this->previousSpace;
+    }
+
+    private function getOppositeMove($move)
+    {
+        switch($move) {
+            case self::MOVEDOWN :
+                return self::MOVEUP;
+            case self::MOVEUP :
+                return self::MOVEDOWN;
+            case self::MOVELEFT :
+                return self::MOVERIGHT;
+            case self::MOVERIGHT :
+                return self::MOVELEFT;
+            default:
+                throw new \InvalidArgumentException(sprintf('%s is not a valid move.', $move));
+        }
     }
 }
