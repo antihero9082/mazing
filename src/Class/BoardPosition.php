@@ -187,6 +187,32 @@ class BoardPosition extends Position
     }
 
     /**
+     * @inheritDoc
+     * @param mixed $xPos
+     * @throws \Exception
+     */
+    public function setXpos($xPos)
+    {
+        if ($xPos > $this->board->getHeight()) {
+            throw new \Exception('Move out of bounds');
+        }
+        parent::setXPos($xPos);
+    }
+
+    /**
+     * @inheritDoc
+     * @param mixed $yPos
+     * @throws \Exception
+     */
+    public function setYpos($yPos)
+    {
+        if($yPos > $this->board->getHeight()) {
+            throw new \Exception('Move out of bounds');
+        }
+        parent::setYPos($yPos);
+    }
+
+    /**
      * @return \src\Board
      */
     public function getBoard()
@@ -234,6 +260,10 @@ class BoardPosition extends Position
         return $this->previousSpace;
     }
 
+    /**
+     * @param $move
+     * @return string
+     */
     private function getOppositeMove($move)
     {
         switch($move) {

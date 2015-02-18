@@ -67,8 +67,8 @@ class Board
 
     public function getValidCell($width, $height)
     {
-        if ($width <= $this->width && $height <= $this->height) { //why does this check this way, and not index in like all the other things
-            return true;
+        if (isset($this->currentState[$width]) && isset($this->currentState[$height])) { //check index like other
+            return true;                                                                 //cell value checks
         }
 
         return false;
